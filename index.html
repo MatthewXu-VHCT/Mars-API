@@ -1,0 +1,178 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"  name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astronomy APP</title>
+  <style>
+    body{
+      margin:2% 4%;
+      font-family: 'Source Sans Pro', sans-serif;
+      text-align: center;
+
+      background-color: #000000;
+    };
+
+    nav{
+      text-decoration: none;
+      margin: 30px 0;
+    }
+
+    nav a{
+      text-decoration: none;
+      padding:5px 5px;
+      margin: 0 30px;
+      color: #ffffff;
+    }
+
+    nav a:hover{
+      border-bottom: solid 2px #000000;
+    }
+
+    p{
+      color: #ffffff;
+      margin:0 4%;
+    }
+
+    img{
+       width: 80%;
+       height: auto;
+    }
+
+    h1{
+      color: #F75454;
+    }
+
+    h3{
+      color: #fff;
+    }
+
+    div{
+      margin: 2% 0;
+    }
+
+    div p{
+      color: #C6C6C6;
+      /* color: #2E292A; */
+      text-align:left;
+      margin:10px 10%;
+    }
+</style>
+</head>
+
+<body>
+  <nav>
+    <a href="index.html" style="color: #F75454;">Mars</a>
+    <a href="astronomy.html">Astronomy</a>
+  </nav>
+
+  <h1>Explore Mars</h1>
+  <p>Learn about the Mars geography through the eyes of the rover -- "Curiosity".</p>
+  <br><br>
+  <button onclick="myFunction()" style="#ffffff;">Try it</button>
+
+  <div id="Pict"></div>
+  <div id="Apic"></div>
+  <!-- <div id="download"></div> -->
+  <div id="errors"></div>
+
+  <script>
+    // Read more about JavaScript Fetch here:
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+
+    // change this to your favourite Pokemon.
+    // the variable that get access to the HTTP pipeline
+    let mySelection = 'Curiosity';
+
+    const fetchNASA = async (name) => {
+        //attach the name of the pokemon dynamically
+        //add 'name' after url-> updates with different names
+        //await --> pause until the promise of fetching
+
+        //fetch from node
+        // let response = await fetch("https://ixd1706.firebird.sheridanc.on.ca/NASA/Mars")
+        let response = await fetch("Mars");
+        if (response.ok) {
+            // return response.photo()
+            return response.json()
+        } else {
+            var p = document.createElement("p");
+            p.innerHTML = response.url + '<br/>' +
+                "Error: " + response.status;
+            document.querySelector('#errors').appendChild(p);
+        }
+    }
+
+    //receiving the fetch data
+    const display = (photosArray) => {
+
+        for (photo of photosArray){
+        //display
+        console.log(photo);
+        var d = document.createElement("div");
+        d.innerHTML =
+            //rover name
+            '<h3>' + (photo.rover.name || "Undefined") + '</h3>' +
+            // $.photos[0,1,2,3,4,5,6,7,8,9,9].rover.name
+
+            //image shown for the pokemon
+            '<img src="' + photo.img_src + '"/> <br>' +
+            //camera name
+            '<p id="cam">Camera  ' + photo.camera.full_name + '</p>' +
+            //earth date
+            '<p>Earth date  ' + photo.earth_date + '</p>' +
+            //landing date
+            '<p>Landing date  ' + photo.rover.landing_date + '</p> <br>';
+
+
+        document.querySelector('#Pict').appendChild(d);
+      }
+    }
+
+//https://www.w3schools.com/jsref/jsref_filter.asp
+
+    function checkCamera(camera){
+      return camera = "Front Hazard Avoidance Camera";
+    }
+
+    function myFunction() {
+      document.getElementById("cam").innerHTML = photo.camera.full_name.filter(checkCamera);
+    }
+
+//https://www.w3schools.com/jsref/jsref_filter.asp
+
+    // const show = (pictures) => {
+    const show = (picture) => {
+        console.log(picture);
+        //show
+        var sec = document.createElement("div");
+        sec.innerHTML =
+            //Title
+            '<h3>' + (picture.title || "Undefined") + '</h3>' +
+            //image shown for the pokemon
+            '<img src="' + picture.hdurl + '" />' +
+            '<p>date: ' + picture.date + '</p>' +
+            '<p>explanation: ' + picture.explanation + '</p>' +
+            '<p>copyright: ' + picture.copyright + '</p>';
+
+        document.querySelector('#Apic').appendChild(sec);
+      // }
+    }
+
+    //JavaScript Interface;
+    //.then --> explicitly define the flow of the fetch function
+    //first fetch the pokemon "myFavorite", then make the data flow in direction
+    fetchNASA(mySelection).then(photo => {
+        if (photo) {
+            display(photo);
+            // download(photo)
+        }
+    })
+
+    // fetchAstront().then(picture ={
+    //         show(picture)
+    // })
+
+
+  </script>
+
+</body>
+</html>
